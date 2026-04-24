@@ -10,15 +10,6 @@ import 'check_card_screen.dart';
 import 'round_summary_screen.dart';
 import 'educational_draw_screen.dart';
 
-const _colColours = [
-  Color(0xFF1B5E7B),
-  Color(0xFF2E7D5E),
-  Color(0xFF7B3F00),
-  Color(0xFF5C3572),
-  Color(0xFFB54A1A),
-];
-const _colNames = ['MURPHY', 'HANNA', 'McCANDLESS', 'SWAN/CROW/O\'BRIEN', 'Mc STREETS'];
-
 class CallerScreen extends StatefulWidget {
   final EduSettings eduSettings;
 
@@ -378,33 +369,33 @@ class _CallerScreenState extends State<CallerScreen> {
   }
 
   Widget _buildLastDraw(DrawnAddress drawn, GameState game) {
-    final colIdx = [
-      'MURPHY', 'HANNA', 'McCANDLESS', 'SWAN_CROW_OBRIEN', 'MC_STREETS'
-    ].indexOf(drawn.column);
+    final game = context.read<GameState>();
     final colour = drawn.isWild
         ? const Color(0xFFE8B84B)
-        : (colIdx >= 0 ? _colColours[colIdx] : const Color(0xFF444444));
+        : Color(game.colourForColumn(drawn.column));
     final colName = drawn.isWild
         ? 'WILD CARD'
-        : (colIdx >= 0 ? _colNames[colIdx] : drawn.column);
+        : game.labelForColumn(drawn.column);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           decoration: BoxDecoration(
             color: colour,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(14),
           ),
           child: Text(
             colName,
+            textAlign: TextAlign.center,
             style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 13,
-                letterSpacing: 1),
+                fontSize: 12,
+                letterSpacing: 0.8,
+                height: 1.5),
           ),
         ),
         const SizedBox(height: 16),
@@ -455,12 +446,10 @@ class _CallerScreenState extends State<CallerScreen> {
         itemCount: history.length,
         itemBuilder: (_, i) {
           final d = history[i];
-          final colIdx = [
-            'MURPHY', 'HANNA', 'McCANDLESS', 'SWAN_CROW_OBRIEN', 'MC_STREETS'
-          ].indexOf(d.column);
+          final game = context.read<GameState>();
           final col = d.isWild
               ? const Color(0xFFE8B84B)
-              : (colIdx >= 0 ? _colColours[colIdx] : const Color(0xFF333344));
+              : Color(game.colourForColumn(d.column));
           return Container(
             margin: const EdgeInsets.only(right: 8),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             _buildHeader(context),
             Expanded(
-              child: game.allCards.isEmpty
+              child: false
                   ? const Center(
                       child: CircularProgressIndicator(color: Color(0xFFE8B84B)),
                     )
