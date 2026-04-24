@@ -255,8 +255,15 @@ class GameState with ChangeNotifier {
 
   // Check a specific card for bingo in the current round
   bool checkCard(int cardNumber) {
-    if (cardNumber < 1 || cardNumber > allCards.length) return false;
-    final card = allCards[cardNumber - 1];
+    if (cardNumber < 1) return false;
+    BingoCard? card;
+    for (final c in allCards) {
+      if (c.cardNumber == cardNumber) {
+        card = c;
+        break;
+      }
+    }
+    if (card == null) return false;
     return card.hasBingo(drawnValues, currentRound);
   }
 
