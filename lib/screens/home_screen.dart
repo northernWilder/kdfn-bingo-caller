@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeader(context),
+            _buildHeader(context, game),
             Expanded(
               child: false
                   ? const Center(
@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, GameState game) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
@@ -56,24 +56,29 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Row(
         children: [
-          Image.asset('assets/images/kdfn-logo.png', height: 56),
+          Image.asset(game.logoPath, height: 56),
           const SizedBox(width: 14),
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Retrofit Bingo',
-                style: TextStyle(
-                  color: Color(0xFFE8B84B),
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  game.gameName,
+                  style: const TextStyle(
+                    color: Color(0xFFE8B84B),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              Text(
-                'KDFN Community Retrofit Initiative',
-                style: TextStyle(color: Color(0xFFAAAAAA), fontSize: 12),
-              ),
-            ],
+                if (game.gameSubtitle.isNotEmpty)
+                  Text(
+                    game.gameSubtitle,
+                    style: const TextStyle(color: Color(0xFFAAAAAA), fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+              ],
+            ),
           ),
           const Spacer(),
           Consumer<AudioService>(
@@ -128,8 +133,8 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildEduSettings(),
           const SizedBox(height: 32),
           _buildStartButton(context, game),
-          const SizedBox(height: 20),
-          _buildRulesCard(),
+          //const SizedBox(height: 20),
+          //_buildRulesCard(),
         ],
       ),
     );
@@ -357,7 +362,7 @@ class _HomeScreenState extends State<HomeScreen> {
         textStyle:
             const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
-      child: const Text('START GAME NIGHT'),
+      child: const Text('START THE GAME!'),
     );
   }
 
@@ -379,9 +384,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontSize: 14)),
           SizedBox(height: 8),
           Text(
-            '• Addresses are drawn one at a time from the hat\n'
+            '• Slips are drawn one at a time from the hat\n'
             '• Players mark their card if the house number appears in the matching street column\n'
-            '• Wild card (77 Long Lake Rd) — mark any unclaimed square\n'
+            '• Wild cards — mark any unclaimed square\n'
             '• Drawn addresses carry over into each new round\n'
             '• Check a card number to instantly verify if it has bingo',
             style: TextStyle(color: Color(0xFFAAAAAA), fontSize: 12, height: 1.6),

@@ -2,16 +2,18 @@
   "games": [
     {
       "game_id": "kdfn_retrofit_2026",
-      "game_name": "KDFN Community Retrofit Initiative",
-      "game_subtitle": "Kwanlin Dün First Nation · 2026",
-      "asset_path": "assets/data/bingo_cards.json",
+      "game_name": "Community Retrofit Initiative",
+      "game_subtitle": "Retrofit themed bingo",
+      "asset_path": "assets/data/kdfn_retrofit_bingo.json",
+      "logo_path": "assets/images/kdfn-logo.png",
       "description": "1,000 cards · 99 addresses · 5 rounds"
     },
     {
       "game_id": "standard_bingo_75",
-      "game_name": "Classic Bingo",
-      "game_subtitle": "Standard 75-Ball · B-I-N-G-O",
+      "game_name": "Classic Retrofit Bingo",
+      "game_subtitle": "Standard 75-Ball · B-I-N-G-O · Retrofit Info added ",
       "asset_path": "assets/data/standard_bingo.json",
+      "logo_path": "",
       "description": "1,000 cards · 75 balls · 5 rounds"
     }
   ]

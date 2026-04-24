@@ -58,7 +58,7 @@ class _GameSelectScreenState extends State<GameSelectScreen> {
       try {
         final data = await GameLoader.loadGameData(def);
         if (mounted) {
-          context.read<GameState>().loadFromData(data);
+          context.read<GameState>().loadFromData(data, logoAssetPath: def.effectiveLogo);
           _navigateToHome();
         }
       } catch (_) {
@@ -95,7 +95,7 @@ class _GameSelectScreenState extends State<GameSelectScreen> {
       await GameLoader.persistUnlock(def.gameId);
       if (mounted) {
         setState(() => _unlocked.add(def.gameId));
-        context.read<GameState>().loadFromData(data);
+        context.read<GameState>().loadFromData(data, logoAssetPath: def.effectiveLogo);
         _navigateToHome();
       }
     }
@@ -249,7 +249,7 @@ class _GameSelectScreenState extends State<GameSelectScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset('assets/images/kdfn-logo.png', height: 48),
+              Image.asset('assets/images/ebs-logo-light.png', height: 48),
               const SizedBox(height: 18),
               const Text(
                 'Retrofit Bingo',
@@ -363,22 +363,20 @@ class _GameCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Icon
+            // Logo
             Container(
-              width: 48,
-              height: 48,
+              width: 56,
+              height: 56,
               decoration: BoxDecoration(
                 color: unlocked
-                    ? const Color(0xFF2E7D5E).withValues(alpha: 0.2)
+                    ? const Color(0xFF2E7D5E).withValues(alpha: 0.15)
                     : const Color(0xFF0F3460),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                Icons.casino_outlined,
-                color: unlocked
-                    ? const Color(0xFF7DC9A8)
-                    : const Color(0xFFE8B84B),
-                size: 26,
+              padding: const EdgeInsets.all(6),
+              child: Image.asset(
+                def.effectiveLogo,
+                fit: BoxFit.contain,
               ),
             ),
             const SizedBox(width: 14),

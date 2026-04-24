@@ -9,15 +9,9 @@ class BingoCard {
 
   factory BingoCard.fromJson(Map<String, dynamic> json) {
     final cols = json['columns'] as Map<String, dynamic>;
-    final colOrder = [
-      'MURPHY',
-      'HANNA',
-      'McCANDLESS',
-      'SWAN_CROW_OBRIEN',
-      'MC_STREETS',
-    ];
-    final List<List<String>> columns = colOrder.map((key) {
-      return (cols[key] as List).map((v) => v.toString()).toList();
+    // Derive column order from the JSON itself so this works for any game.
+    final List<List<String>> columns = cols.values.map((col) {
+      return (col as List).map((v) => v.toString()).toList();
     }).toList();
     return BingoCard(
       cardNumber: json['card_number'] as int,

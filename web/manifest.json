@@ -1,11 +1,11 @@
 {
-    "name": "kdfn_bingo_caller",
-    "short_name": "kdfn_bingo_caller",
+    "name": "Retrofit Bingo",
+    "short_name": "Bingo",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#1A1A2E",
+    "theme_color": "#0F3460",
+    "description": "EBS Bingo Caller — powered by Easy Bingo Solutions.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

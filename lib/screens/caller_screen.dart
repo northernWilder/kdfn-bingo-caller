@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -19,10 +21,18 @@ class CallerScreen extends StatefulWidget {
   State<CallerScreen> createState() => _CallerScreenState();
 }
 
-class _CallerScreenState extends State<CallerScreen> {
+class _CallerScreenState extends State<CallerScreen>
+    with SingleTickerProviderStateMixin {
   bool _drawing = false;
   late ConfettiController _confetti;
   final TextEditingController _cardCheckCtrl = TextEditingController();
+
+  // Rolling ball animation state
+  String _rollingValue = '?';
+  Color _rollingColour = const Color(0xFFE8B84B);
+  Timer? _rollingTimer;
+  late AnimationController _spinController;
+  final _rng = Random();
 
   // Educational draw state
   List<EducationalDraw> _eduDraws = [];
@@ -35,6 +45,10 @@ class _CallerScreenState extends State<CallerScreen> {
   void initState() {
     super.initState();
     _confetti = ConfettiController(duration: const Duration(seconds: 3));
+    _spinController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
     _loadEduDraws();
   }
 
@@ -48,6 +62,8 @@ class _CallerScreenState extends State<CallerScreen> {
   void dispose() {
     _confetti.dispose();
     _cardCheckCtrl.dispose();
+    _rollingTimer?.cancel();
+    _spinController.dispose();
     super.dispose();
   }
 
@@ -59,10 +75,31 @@ class _CallerScreenState extends State<CallerScreen> {
     final audio = context.read<AudioService>();
     if (game.allDrawn) return;
 
+    // Build a pool of all remaining values to flicker through
+    final allValues = game.columnPools.entries
+        .expand((e) => e.value.map((v) => (col: e.key, val: v)))
+        .toList()..shuffle(_rng);
+
+    int flickerIndex = 0;
+    _spinController.repeat();
+    _rollingTimer = Timer.periodic(const Duration(milliseconds: 80), (_) {
+      final item = allValues[flickerIndex % allValues.length];
+      flickerIndex++;
+      setState(() {
+        _rollingValue = item.val;
+        _rollingColour = Color(game.colourForColumn(item.col));
+      });
+    });
+
     setState(() => _drawing = true);
     await audio.playDrawSequence();
     game.drawNext();
     _drawsSinceLastEdu++;
+
+    _rollingTimer?.cancel();
+    _rollingTimer = null;
+    _spinController.stop();
+    _spinController.reset();
     setState(() => _drawing = false);
 
     // Check everyN trigger after state update
@@ -333,13 +370,95 @@ class _CallerScreenState extends State<CallerScreen> {
                   ),
                 ],
               ),
-              child: last == null
-                  ? _buildTapToStart()
-                  : _buildLastDraw(last, game),
+              child: _drawing
+                  ? _buildRollingBall()
+                  : last == null
+                      ? _buildTapToStart()
+                      : _buildLastDraw(last, game),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildRollingBall() {
+    return AnimatedBuilder(
+      animation: _spinController,
+      builder: (_, __) {
+        const size = 160.0;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'DRAWING...',
+              style: TextStyle(
+                color: Color(0xFFE8B84B),
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 3,
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Spinning bingo ball
+            Transform.rotate(
+              angle: _spinController.value * 2 * pi,
+              child: SizedBox(
+                width: size,
+                height: size,
+                child: CustomPaint(
+                  painter: _BingoBallPainter(colour: _rollingColour),
+                  child: Center(
+                    child: Text(
+                      _rollingValue,
+                      style: TextStyle(
+                        color: _rollingColour.computeLuminance() > 0.4
+                            ? Colors.black87
+                            : Colors.white,
+                        fontSize: _rollingValue.length > 2 ? 28 : 38,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'monospace',
+                      ),
+                    )
+                        .animate(onPlay: (c) => c.repeat())
+                        .fadeIn(duration: 60.ms)
+                        .then()
+                        .fadeOut(duration: 60.ms),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Bouncing dots indicator
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(3, (i) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: _rollingColour.withValues(alpha: 0.8),
+                    shape: BoxShape.circle,
+                  ),
+                )
+                    .animate(onPlay: (c) => c.repeat())
+                    .moveY(
+                      begin: 0,
+                      end: -10,
+                      duration: 400.ms,
+                      delay: Duration(milliseconds: i * 130),
+                      curve: Curves.easeInOut,
+                    )
+                    .then()
+                    .moveY(begin: -10, end: 0, duration: 400.ms,
+                        curve: Curves.easeInOut);
+              }),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -382,10 +501,10 @@ class _CallerScreenState extends State<CallerScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
           decoration: BoxDecoration(
             color: colour,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(18),
           ),
           child: Text(
             colName,
@@ -393,9 +512,9 @@ class _CallerScreenState extends State<CallerScreen> {
             style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
-                letterSpacing: 0.8,
-                height: 1.5),
+                fontSize: 22,
+                letterSpacing: 1.5,
+                height: 1.2),
           ),
         ),
         const SizedBox(height: 16),
@@ -543,4 +662,68 @@ class _CallerScreenState extends State<CallerScreen> {
       ),
     );
   }
+}
+
+// ── Bingo ball custom painter ─────────────────────────────────────────────────
+
+class _BingoBallPainter extends CustomPainter {
+  final Color colour;
+  _BingoBallPainter({required this.colour});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2;
+
+    // Base ball
+    final ballPaint = Paint()
+      ..shader = RadialGradient(
+        center: const Alignment(-0.3, -0.3),
+        radius: 0.9,
+        colors: [
+          Color.lerp(colour, Colors.white, 0.35)!,
+          colour,
+          Color.lerp(colour, Colors.black, 0.3)!,
+        ],
+        stops: const [0.0, 0.5, 1.0],
+      ).createShader(Rect.fromCircle(center: center, radius: radius));
+    canvas.drawCircle(center, radius, ballPaint);
+
+    // Horizontal stripe band
+    final stripePath = Path()
+      ..addOval(Rect.fromCenter(
+          center: center, width: size.width, height: size.height * 0.38));
+    canvas.save();
+    canvas.clipPath(stripePath);
+    canvas.drawRect(
+      Rect.fromLTWH(0, size.height * 0.31, size.width, size.height * 0.38),
+      Paint()..color = Colors.white.withValues(alpha: 0.25),
+    );
+    canvas.restore();
+
+    // Shine highlight
+    final shinePaint = Paint()
+      ..shader = RadialGradient(
+        center: const Alignment(-0.4, -0.5),
+        radius: 0.55,
+        colors: [
+          Colors.white.withValues(alpha: 0.55),
+          Colors.white.withValues(alpha: 0.0),
+        ],
+      ).createShader(Rect.fromCircle(center: center, radius: radius));
+    canvas.drawCircle(center, radius, shinePaint);
+
+    // Outer ring
+    canvas.drawCircle(
+      center,
+      radius - 1,
+      Paint()
+        ..color = Colors.white.withValues(alpha: 0.2)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_BingoBallPainter old) => old.colour != colour;
 }

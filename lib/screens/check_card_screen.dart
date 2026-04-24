@@ -5,14 +5,6 @@ import '../models/bingo_card.dart';
 import '../services/audio_service.dart';
 import 'package:confetti/confetti.dart';
 
-const _colColours = [
-  Color(0xFF1B5E7B),
-  Color(0xFF2E7D5E),
-  Color(0xFF7B3F00),
-  Color(0xFF5C3572),
-  Color(0xFFB54A1A),
-];
-const _colLabels = ['MURPHY', 'HANNA', 'McCAND', 'SWAN/\nCROW', 'Mc\nSTREETS'];
 
 class CheckCardScreen extends StatefulWidget {
   const CheckCardScreen({super.key});
@@ -187,6 +179,7 @@ class _CheckCardScreenState extends State<CheckCardScreen> {
   }
 
   Widget _buildGrid(BingoCard card, GameState game) {
+    final colKeys = game.columnPools.keys.toList();
     final colW = (MediaQuery.of(context).size.width - 40) / 5;
     const hdrH = 44.0;
     const cellH = 48.0;
@@ -195,22 +188,24 @@ class _CheckCardScreenState extends State<CheckCardScreen> {
       children: [
         // Header row
         Row(
-          children: List.generate(5, (ci) {
+          children: List.generate(colKeys.length, (ci) {
+            final colKey = ci < colKeys.length ? colKeys[ci] : '';
+            final colColour = Color(game.colourForColumn(colKey));
             return Container(
               width: colW,
               height: hdrH,
               decoration: BoxDecoration(
-                color: _colColours[ci],
+                color: colColour,
                 border: Border.all(color: Colors.black26, width: 0.5),
               ),
               child: Center(
                 child: Text(
-                  _colLabels[ci],
+                  game.labelForColumn(colKey),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 9,
+                    fontSize: 11,
                   ),
                 ),
               ),
@@ -220,18 +215,22 @@ class _CheckCardScreenState extends State<CheckCardScreen> {
         // Cell rows
         ...List.generate(5, (ri) {
           return Row(
-            children: List.generate(5, (ci) {
+            children: List.generate(colKeys.length, (ci) {
               final isFree = ci == 2 && ri == 2;
               final val = isFree ? 'FREE' : card.columns[ci][ri];
               final marked = card.isCellMarked(ci, ri, game.drawnValues);
+              final colKey = ci < colKeys.length ? colKeys[ci] : '';
+              final colColour = Color(game.colourForColumn(colKey));
+              final freeColKey = colKeys.length > 2 ? colKeys[2] : colKey;
+              final freeColour = Color(game.colourForColumn(freeColKey));
 
               Color bg;
               Color textColor;
               if (isFree) {
-                bg = _colColours[2].withValues(alpha: 0.7);
+                bg = freeColour.withValues(alpha: 0.7);
                 textColor = Colors.white;
               } else if (marked) {
-                bg = _colColours[ci].withValues(alpha: 0.6);
+                bg = colColour.withValues(alpha: 0.6);
                 textColor = Colors.white;
               } else {
                 bg = ri.isEven ? const Color(0xFF1E1E3A) : const Color(0xFF1A1A2E);
@@ -247,7 +246,7 @@ class _CheckCardScreenState extends State<CheckCardScreen> {
                 ),
                 child: Center(
                   child: isFree
-                      ? Image.asset('assets/images/kdfn-logo.png',
+                      ? Image.asset(game.logoPath,
                           width: 32, height: 32)
                       : Text(
                           val,

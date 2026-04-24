@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kdfn_bingo_caller/models/bingo_card.dart';
+import 'package:bs_bingo_caller/models/bingo_card.dart';
 
 void main() {
   group('BingoCard.hasBingo', () {

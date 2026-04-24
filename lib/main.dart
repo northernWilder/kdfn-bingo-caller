@@ -6,11 +6,11 @@ import 'screens/game_select_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const KdfnBingoApp());
+  runApp(const ebsBingoApp());
 }
 
-class KdfnBingoApp extends StatelessWidget {
-  const KdfnBingoApp({super.key});
+class ebsBingoApp extends StatelessWidget {
+  const ebsBingoApp({super.key});
 
   @override
   Widget build(BuildContext context) {

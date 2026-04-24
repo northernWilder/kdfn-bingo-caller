@@ -1,4 +1,4 @@
-package com.kdfn.kdfn_bingo_caller
+package com.ebs.bs_bingo_caller
 
 import io.flutter.embedding.android.FlutterActivity
 

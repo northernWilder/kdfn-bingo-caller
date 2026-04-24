@@ -1,6 +1,6 @@
 # Retrofit Bingo — Caller App
 
-Flutter Android app for the **KDFN Community Retrofit Initiative** bingo game night. Designed to be used by the caller to draw addresses, verify winning cards, and guide the evening through multiple rounds.
+Flutter Android app for the **ebs Community Retrofit Initiative** bingo game night. Designed to be used by the caller to draw addresses, verify winning cards, and guide the evening through multiple rounds.
 
 ---
 
@@ -92,5 +92,5 @@ lib/
 assets/
   data/bingo_cards.json       — 1,000 card layouts
   sounds/                     — MP3 sound effects
-  images/kdfn-logo.png        — KDFN logo (transparent)
+  images/ebs-logo.png        — ebs logo (transparent)
 ```

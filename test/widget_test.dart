@@ -7,12 +7,12 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:kdfn_bingo_caller/main.dart';
+import 'package:bs_bingo_caller/main.dart';
 
 void main() {
   testWidgets('App shows loading state', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const KdfnBingoApp());
+    await tester.pumpWidget(const ebsBingoApp());
 
     // Initial frame should render the loading shell while cards are loading.
     expect(find.text('Loading 1,000 cards...'), findsOneWidget);

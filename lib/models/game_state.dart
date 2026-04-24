@@ -30,6 +30,7 @@ class GameState with ChangeNotifier {
   String gameId = '';
   String gameName = '';
   String gameSubtitle = '';
+  String logoPath = 'assets/images/ebs-logo-dark.png';
 
   // ── Card data ──────────────────────────────────────────────────────────────
   List<BingoCard> allCards = [];
@@ -74,10 +75,11 @@ class GameState with ChangeNotifier {
 
   // ── Load from pre-decoded JSON map ─────────────────────────────────────────
   /// Called by GameSelectScreen after access code is verified.
-  void loadFromData(Map<String, dynamic> data) {
+  void loadFromData(Map<String, dynamic> data, {String logoAssetPath = ''}) {
     gameId = data['game_id'] as String? ?? '';
     gameName = data['game_name'] as String? ?? '';
     gameSubtitle = data['game_subtitle'] as String? ?? '';
+    if (logoAssetPath.isNotEmpty) logoPath = logoAssetPath;
 
     allCards = (data['cards'] as List)
         .map((j) => BingoCard.fromJson(j as Map<String, dynamic>))
