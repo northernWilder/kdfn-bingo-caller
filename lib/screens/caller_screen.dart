@@ -382,18 +382,20 @@ class _CallerScreenState extends State<CallerScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           decoration: BoxDecoration(
             color: colour,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(14),
           ),
           child: Text(
             colName,
+            textAlign: TextAlign.center,
             style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 13,
-                letterSpacing: 1),
+                fontSize: 12,
+                letterSpacing: 0.8,
+                height: 1.5),
           ),
         ),
         const SizedBox(height: 16),
