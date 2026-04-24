@@ -26,7 +26,7 @@ class EducationalDrawScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF2E7D5E).withOpacity(0.3),
+                      color: const Color(0xFF2E7D5E).withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: const Color(0xFF2E7D5E), width: 1),
                     ),
@@ -44,7 +44,7 @@ class EducationalDrawScreen extends StatelessWidget {
                   Text(
                     'DID YOU KNOW?',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.4),
+                      color: Colors.white.withValues(alpha: 0.4),
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1.5,
@@ -89,9 +89,9 @@ class EducationalDrawScreen extends StatelessWidget {
               margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.08),
+                color: Colors.white.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.white.withOpacity(0.1)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,7 +152,7 @@ class _BulletPoint extends StatelessWidget {
             child: Text(
               text,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.88),
+                color: Colors.white.withValues(alpha: 0.88),
                 fontSize: 13.5,
                 height: 1.5,
               ),

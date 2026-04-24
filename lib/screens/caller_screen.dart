@@ -35,8 +35,10 @@ class _CallerScreenState extends State<CallerScreen> {
 
   // Educational draw state
   List<EducationalDraw> _eduDraws = [];
-  int _eduIndex = 0;          // cycles through all 9
+  int _eduIndex = 0;          // advances through each draw once per game
   int _drawsSinceLastEdu = 0; // tracks draws since last edu card
+
+  bool get _hasRemainingEduDraws => _eduIndex < _eduDraws.length;
 
   @override
   void initState() {
@@ -73,14 +75,15 @@ class _CallerScreenState extends State<CallerScreen> {
     setState(() => _drawing = false);
 
     // Check everyN trigger after state update
-    if (widget.eduSettings.shouldShowAfterDraw(_drawsSinceLastEdu)) {
+    if (_hasRemainingEduDraws &&
+        widget.eduSettings.shouldShowAfterDraw(_drawsSinceLastEdu)) {
       await _showEduDraw();
     }
   }
 
   Future<void> _showEduDraw() async {
-    if (_eduDraws.isEmpty) return;
-    final draw = _eduDraws[_eduIndex % _eduDraws.length];
+    if (!_hasRemainingEduDraws) return;
+    final draw = _eduDraws[_eduIndex];
     _eduIndex++;
     _drawsSinceLastEdu = 0;
 
@@ -168,7 +171,8 @@ class _CallerScreenState extends State<CallerScreen> {
                   game.advanceRound();
                   Navigator.pop(context);
                   // Between-rounds edu trigger
-                  if (widget.eduSettings.shouldShowOnRoundStart()) {
+                  if (_hasRemainingEduDraws &&
+                      widget.eduSettings.shouldShowOnRoundStart()) {
                     await _showEduDraw();
                   }
                 },
@@ -244,9 +248,9 @@ class _CallerScreenState extends State<CallerScreen> {
               margin: const EdgeInsets.only(right: 6),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: const Color(0xFF2E7D5E).withOpacity(0.25),
+                color: const Color(0xFF2E7D5E).withValues(alpha: 0.25),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFF2E7D5E).withOpacity(0.5)),
+                border: Border.all(color: const Color(0xFF2E7D5E).withValues(alpha: 0.5)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
