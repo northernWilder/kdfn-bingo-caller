@@ -6,6 +6,13 @@
       "game_subtitle": "Kwanlin Dün First Nation · 2026",
       "asset_path": "assets/data/bingo_cards.json",
       "description": "1,000 cards · 99 addresses · 5 rounds"
+    },
+    {
+      "game_id": "standard_bingo_75",
+      "game_name": "Classic Bingo",
+      "game_subtitle": "Standard 75-Ball · B-I-N-G-O",
+      "asset_path": "assets/data/standard_bingo.json",
+      "description": "1,000 cards · 75 balls · 5 rounds"
     }
   ]
 }
