@@ -28,13 +28,15 @@ class AudioService {
   Future<void> playNoBingo() => _play('no_bingo.mp3');
   Future<void> playRoundComplete() => _play('round_complete.mp3');
 
-  // Full draw sequence: roll → drop → reveal
+  // Full draw sequence: roll (tumbling) → drop → reveal
+  // ball_roll.mp3 is ~5s of ping-pong balls tumbling; we let it play for 2.5s
+  // before cutting to the drop sound for a natural feel.
   Future<void> playDrawSequence() async {
     if (_muted) return;
     await playBallRoll();
-    await Future.delayed(const Duration(milliseconds: 350));
+    await Future.delayed(const Duration(milliseconds: 2500));
     await playBallDrop();
-    await Future.delayed(const Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 600));
     await playDrawReveal();
   }
 
