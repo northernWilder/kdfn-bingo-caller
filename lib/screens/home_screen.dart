@@ -4,7 +4,9 @@ import '../models/game_state.dart';
 import '../models/bingo_card.dart';
 import '../models/educational_draw.dart';
 import '../services/audio_service.dart';
+import '../services/game_loader.dart';
 import 'caller_screen.dart';
+import 'game_select_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -85,6 +87,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 (ctx as Element).markNeedsBuild();
               },
             ),
+          ),
+          IconButton(
+            tooltip: 'Change Game',
+            icon: const Icon(Icons.swap_horiz, color: Color(0xFFE8B84B)),
+            onPressed: () async {
+              final game = context.read<GameState>();
+              // Revoke persistence for the current game so it isn't
+              // silently auto-loaded next time the selector opens.
+              final currentId = game.gameId;
+              if (currentId != null && currentId.isNotEmpty) {
+                await GameLoader.revokeUnlock(currentId);
+              }
+              if (context.mounted) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const GameSelectScreen(),
+                  ),
+                );
+              }
+            },
           ),
         ],
       ),
