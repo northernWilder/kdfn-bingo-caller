@@ -4,9 +4,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:confetti/confetti.dart';
 import '../models/game_state.dart';
 import '../models/bingo_card.dart';
+import '../models/educational_draw.dart';
 import '../services/audio_service.dart';
 import 'check_card_screen.dart';
 import 'round_summary_screen.dart';
+import 'educational_draw_screen.dart';
 
 const _colColours = [
   Color(0xFF1B5E7B),
@@ -18,7 +20,9 @@ const _colColours = [
 const _colNames = ['MURPHY', 'HANNA', 'McCANDLESS', 'SWAN/CROW/O\'BRIEN', 'Mc STREETS'];
 
 class CallerScreen extends StatefulWidget {
-  const CallerScreen({super.key});
+  final EduSettings eduSettings;
+
+  const CallerScreen({super.key, required this.eduSettings});
 
   @override
   State<CallerScreen> createState() => _CallerScreenState();
@@ -29,10 +33,24 @@ class _CallerScreenState extends State<CallerScreen> {
   late ConfettiController _confetti;
   final TextEditingController _cardCheckCtrl = TextEditingController();
 
+  // Educational draw state
+  List<EducationalDraw> _eduDraws = [];
+  int _eduIndex = 0;          // advances through each draw once per game
+  int _drawsSinceLastEdu = 0; // tracks draws since last edu card
+
+  bool get _hasRemainingEduDraws => _eduIndex < _eduDraws.length;
+
   @override
   void initState() {
     super.initState();
     _confetti = ConfettiController(duration: const Duration(seconds: 3));
+    _loadEduDraws();
+  }
+
+  Future<void> _loadEduDraws() async {
+    final draws = await EducationalDraw.loadAll();
+    draws.shuffle(); // randomise order each game
+    if (mounted) setState(() => _eduDraws = draws);
   }
 
   @override
@@ -41,6 +59,8 @@ class _CallerScreenState extends State<CallerScreen> {
     _cardCheckCtrl.dispose();
     super.dispose();
   }
+
+  // ── Draw logic ──────────────────────────────────────────────────────────────
 
   Future<void> _draw(BuildContext context) async {
     if (_drawing) return;
@@ -51,8 +71,39 @@ class _CallerScreenState extends State<CallerScreen> {
     setState(() => _drawing = true);
     await audio.playDrawSequence();
     game.drawNext();
+    _drawsSinceLastEdu++;
     setState(() => _drawing = false);
+
+    // Check everyN trigger after state update
+    if (_hasRemainingEduDraws &&
+        widget.eduSettings.shouldShowAfterDraw(_drawsSinceLastEdu)) {
+      await _showEduDraw();
+    }
   }
+
+  Future<void> _showEduDraw() async {
+    if (!_hasRemainingEduDraws) return;
+    final draw = _eduDraws[_eduIndex];
+    _eduIndex++;
+    _drawsSinceLastEdu = 0;
+
+    await Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => EducationalDrawScreen(
+          draw: draw,
+          onDismiss: () => Navigator.pop(context),
+        ),
+        transitionsBuilder: (_, anim, __, child) => FadeTransition(
+          opacity: anim,
+          child: child,
+        ),
+        transitionDuration: const Duration(milliseconds: 300),
+      ),
+    );
+  }
+
+  // ── Card check ──────────────────────────────────────────────────────────────
 
   void _checkCard(BuildContext context, int cardNum) {
     final game = context.read<GameState>();
@@ -100,6 +151,8 @@ class _CallerScreenState extends State<CallerScreen> {
     );
   }
 
+  // ── End round ───────────────────────────────────────────────────────────────
+
   void _endRound(BuildContext context) {
     final game = context.read<GameState>();
     final audio = context.read<AudioService>();
@@ -114,14 +167,21 @@ class _CallerScreenState extends State<CallerScreen> {
           drawnCount: game.drawnAddresses.length,
           onNext: game.isLastRound
               ? null
-              : () {
+              : () async {
                   game.advanceRound();
                   Navigator.pop(context);
+                  // Between-rounds edu trigger
+                  if (_hasRemainingEduDraws &&
+                      widget.eduSettings.shouldShowOnRoundStart()) {
+                    await _showEduDraw();
+                  }
                 },
         ),
       ),
     );
   }
+
+  // ── Build ────────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -182,6 +242,30 @@ class _CallerScreenState extends State<CallerScreen> {
             style: const TextStyle(color: Color(0xFFAAAAAA), fontSize: 12),
           ),
           const SizedBox(width: 8),
+          // Edu draw indicator chip
+          if (widget.eduSettings.mode != EduTriggerMode.off)
+            Container(
+              margin: const EdgeInsets.only(right: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: const Color(0xFF2E7D5E).withValues(alpha: 0.25),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFF2E7D5E).withValues(alpha: 0.5)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.lightbulb_outline, size: 12, color: Color(0xFF7DC9A8)),
+                  const SizedBox(width: 4),
+                  Text(
+                    widget.eduSettings.mode == EduTriggerMode.everyN
+                        ? 'Edu: every ${widget.eduSettings.everyN}'
+                        : 'Edu: rounds',
+                    style: const TextStyle(color: Color(0xFF7DC9A8), fontSize: 11),
+                  ),
+                ],
+              ),
+            ),
           ElevatedButton.icon(
             icon: const Icon(Icons.check_circle_outline, size: 16),
             label: const Text('Check Card'),

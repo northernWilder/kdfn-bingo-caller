@@ -2,11 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/game_state.dart';
 import '../models/bingo_card.dart';
+import '../models/educational_draw.dart';
 import '../services/audio_service.dart';
 import 'caller_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  EduSettings _eduSettings = const EduSettings(
+    mode: EduTriggerMode.everyN,
+    everyN: 5,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +101,8 @@ class HomeScreen extends StatelessWidget {
           _buildInfoCard(game),
           const SizedBox(height: 24),
           _buildRoundSelector(context, game),
+          const SizedBox(height: 24),
+          _buildEduSettings(),
           const SizedBox(height: 32),
           _buildStartButton(context, game),
           const SizedBox(height: 20),
@@ -202,13 +215,115 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildEduSettings() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Educational Draws',
+          style: TextStyle(
+              color: Color(0xFFE8B84B),
+              fontSize: 16,
+              fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 4),
+        const Text(
+          'Learn about the retrofit upgrades during gameplay',
+          style: TextStyle(color: Color(0xFFAAAAAA), fontSize: 12),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF16213E),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: const Color(0xFF0F3460)),
+          ),
+          child: Column(
+            children: [
+              // Mode selector
+              Row(
+                children: [
+                  _eduModeChip('Off', EduTriggerMode.off),
+                  const SizedBox(width: 8),
+                  _eduModeChip('Every N Draws', EduTriggerMode.everyN),
+                  const SizedBox(width: 8),
+                  _eduModeChip('Between Rounds', EduTriggerMode.betweenRounds),
+                ],
+              ),
+              // N slider — only shown when everyN is selected
+              if (_eduSettings.mode == EduTriggerMode.everyN) ...[
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    const Text('Show every',
+                        style: TextStyle(color: Color(0xFFAAAAAA), fontSize: 13)),
+                    Expanded(
+                      child: Slider(
+                        value: _eduSettings.everyN.toDouble(),
+                        min: 3,
+                        max: 15,
+                        divisions: 12,
+                        activeColor: const Color(0xFFE8B84B),
+                        inactiveColor: const Color(0xFF0F3460),
+                        onChanged: (v) => setState(() {
+                          _eduSettings = _eduSettings.copyWith(everyN: v.round());
+                        }),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 48,
+                      child: Text(
+                        '${_eduSettings.everyN} draws',
+                        style: const TextStyle(
+                            color: Color(0xFFE8B84B),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _eduModeChip(String label, EduTriggerMode mode) {
+    final selected = _eduSettings.mode == mode;
+    return GestureDetector(
+      onTap: () => setState(() {
+        _eduSettings = _eduSettings.copyWith(mode: mode);
+      }),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+        decoration: BoxDecoration(
+          color: selected ? const Color(0xFFE8B84B) : const Color(0xFF0F3460),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: selected ? const Color(0xFF1A1A2E) : const Color(0xFFAAAAAA),
+            fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+            fontSize: 12,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildStartButton(BuildContext context, GameState game) {
     return ElevatedButton(
       onPressed: () {
         context.read<GameState>().startGame();
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const CallerScreen()),
+          MaterialPageRoute(
+            builder: (_) => CallerScreen(eduSettings: _eduSettings),
+          ),
         );
       },
       style: ElevatedButton.styleFrom(

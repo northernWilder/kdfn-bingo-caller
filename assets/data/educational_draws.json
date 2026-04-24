@@ -1,0 +1,103 @@
+{
+  "educational_draws": [
+    {
+      "id": "attic_insulation",
+      "title": "Attic Insulation",
+      "category": "Staying Warm & Comfortable",
+      "image": "assets/images/edu/edu_attic_insulation.png",
+      "bullets": [
+        "Heat rises — and in older homes, most of it escapes right through the ceiling into the attic. Upgrading the insulation up there is one of the biggest things we can do to keep your home warmer all winter long.",
+        "Your attic is being filled with thick blown-in insulation to an R-60 rating — that's about 20 inches of material acting like a giant warm blanket over your whole home.",
+        "After this upgrade, you'll notice your home stays warmer longer after the heat kicks off, and the temperature stays much more even from room to room."
+      ]
+    },
+    {
+      "id": "wall_insulation",
+      "title": "Wall Insulation",
+      "category": "Staying Warm & Comfortable",
+      "image": "assets/images/edu/edu_wall_insulation.png",
+      "bullets": [
+        "You know that cold radiating feeling when you sit near an exterior wall in January? That's heat escaping through the wall — and it happens even if there's already some insulation inside.",
+        "Every home is getting a continuous layer of rigid insulation wrapped around the outside of the walls. This stops the cold from creeping through the wooden studs, which act like little bridges for heat to escape.",
+        "The new siding goes right on top, so from the outside your home will look fresh and updated — and from the inside, those cold walls will finally feel warm to the touch."
+      ]
+    },
+    {
+      "id": "foundation",
+      "title": "Foundation Insulation & Waterproofing",
+      "category": "Staying Warm & Comfortable",
+      "image": "assets/images/edu/edu_foundation.png",
+      "bullets": [
+        "Cold floors and damp basements are a sign that the foundation isn't properly insulated or sealed. We're excavating around the entire perimeter of each home to fix this from the outside in.",
+        "A waterproofing membrane goes on first to keep moisture out, then thick rigid foam insulation is installed all the way down to the footings. A gravel skirt and drainage layer are added to direct spring melt water away from the house.",
+        "The result is a drier, warmer basement and noticeably warmer floors — no more cold feet walking around downstairs in the morning."
+      ]
+    },
+    {
+      "id": "air_sealing",
+      "title": "Air Sealing",
+      "category": "Staying Warm & Comfortable",
+      "image": "assets/images/edu/edu_air_sealing.png",
+      "bullets": [
+        "Drafts aren't just annoying — they're a sign that cold outside air is sneaking in through gaps around pipes, wires, light fixtures, and framing joints. No amount of heat can fix a drafty home if the gaps are still there.",
+        "Every home is getting a continuous air barrier — a special membrane taped at every seam and sealed at every penetration. Spray foam fills the tricky spots around the attic edges and any gaps in the structure.",
+        "After air sealing, the home holds heat much more evenly. That cold spot by the front door or the draft near the baseboard? Gone."
+      ]
+    },
+    {
+      "id": "windows",
+      "title": "Triple-Pane Windows",
+      "category": "Staying Warm & Comfortable",
+      "image": "assets/images/edu/edu_windows.png",
+      "bullets": [
+        "Older double-pane windows let a lot of cold in — you can feel it radiating off the glass when you stand nearby, and condensation or frost on the inside of the window is a sure sign heat is escaping.",
+        "Every double-pane window in the program is being replaced with a new triple-pane unit — three layers of glass with insulating gas in between, designed specifically for Yukon winters.",
+        "You'll notice the difference right away: no more cold zones near the windows, no frost on the inside of the glass, and a much quieter home when the wind is blowing."
+      ]
+    },
+    {
+      "id": "hrv",
+      "title": "Heat Recovery Ventilator (HRV)",
+      "category": "Fresh Air & Health",
+      "image": "assets/images/edu/edu_hrv.png",
+      "bullets": [
+        "When a home is sealed up tight for the winter, the air inside can get stale fast — cooking smells, moisture, and everyday pollutants build up with nowhere to go. An HRV solves this without wasting heat.",
+        "The HRV continuously pulls stale air out of the bathrooms and kitchen while pulling fresh air in from outside. The clever part: the two airstreams pass by each other inside the unit, so the outgoing air warms the incoming air before it ever reaches your rooms.",
+        "Every home in the program is getting a new HRV with controls in the bathroom and kitchen. The air in your home will feel fresher, humidity will be steadier, and cooking smells won't linger."
+      ]
+    },
+    {
+      "id": "bathroom_fans",
+      "title": "Bathroom Fans & Timers",
+      "category": "Fresh Air & Health",
+      "image": "assets/images/edu/edu_bathroom_fans.png",
+      "bullets": [
+        "In a tightly sealed home, moisture from showers and baths has nowhere to escape — and that moisture is what causes mold to grow on ceilings, walls, and window frames over time.",
+        "Every bathroom is getting a new high-quality Panasonic ventilation fan with an automatic timer. The fan runs for a set time after you're done showering, making sure all that moisture gets vented completely outside through the wall.",
+        "The difference is a drier bathroom, a clearer mirror, and much less risk of mold forming anywhere in the home — especially in the winter months."
+      ]
+    },
+    {
+      "id": "heat_pump",
+      "title": "Cold-Climate Heat Pump",
+      "category": "Heat & Power",
+      "image": "assets/images/edu/edu_heat_pump.png",
+      "bullets": [
+        "A cold-climate heat pump looks like an air conditioner unit outside your home, but it works as your main source of heat. It pulls heat energy out of the outdoor air — even when it's -30°C outside — and moves it inside.",
+        "Because it moves heat rather than creating it, a heat pump can deliver two to three times more warmth per unit of electricity than a regular electric baseboard heater. Your existing furnace stays in place as a backup for the very coldest days.",
+        "Every heat pump in this program is certified to work efficiently in Yukon conditions, and comes with a 10-year parts warranty. You'll have quieter, more even heat throughout the home."
+      ]
+    },
+    {
+      "id": "generator",
+      "title": "Generator Transfer Switch",
+      "category": "Heat & Power",
+      "image": "assets/images/edu/edu_generator.png",
+      "bullets": [
+        "Power outages in a Yukon winter are a real safety concern — without heat, a home can get dangerously cold very quickly. Every home is getting a manual transfer switch that lets you plug in a generator and power the most critical circuits.",
+        "The switch is wired to keep your fridge, freezer, lights, living room outlets, and furnace running during an outage — the things that matter most when the power goes out in January.",
+        "You don't need to do anything different day-to-day. If there's ever an outage, you connect a generator to the outdoor inlet plug, flip the transfer switch, and your essential circuits come back on."
+      ]
+    }
+  ]
+}
