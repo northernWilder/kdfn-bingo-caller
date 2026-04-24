@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'bingo_card.dart';
 
@@ -26,7 +27,7 @@ class DrawnAddress {
   });
 }
 
-class GameState {
+class GameState with ChangeNotifier {
   List<BingoCard> allCards = [];
   Map<String, List<String>> columnPools = {};
   String wildCard = '77 Long Lake Rd';
@@ -69,6 +70,7 @@ class GameState {
 
     wildCard = data['wild_card'] as String;
     _buildDrawBag();
+    notifyListeners();
   }
 
   static const Map<String, String> _colStreetLabel = {
@@ -130,6 +132,7 @@ class GameState {
     currentRoundIndex = 0;
     bingosPerRound = List.generate(kRoundSequence.length, (_) => []);
     _drawBag.shuffle(Random());
+    notifyListeners();
   }
 
   // Draw the next address. Returns null if bag is empty.
@@ -140,6 +143,7 @@ class GameState {
     if (!drawn.isWild) {
       drawnValues.add(drawn.value);
     }
+    notifyListeners();
     return drawn;
   }
 
@@ -154,6 +158,7 @@ class GameState {
   void recordBingo(int cardNumber) {
     if (!bingosPerRound[currentRoundIndex].contains(cardNumber)) {
       bingosPerRound[currentRoundIndex].add(cardNumber);
+      notifyListeners();
     }
   }
 
@@ -162,6 +167,7 @@ class GameState {
     if (isLastRound) return false;
     currentRoundIndex++;
     roundInProgress = true;
+    notifyListeners();
     return true;
   }
 

@@ -148,8 +148,8 @@ class _CheckCardScreenState extends State<CheckCardScreen> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: hasBingo
-                ? const Color(0xFFE8B84B).withOpacity(0.15)
-                : Colors.red.withOpacity(0.1),
+                ? const Color(0xFFE8B84B).withValues(alpha: 0.15)
+                : Colors.red.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
                 color: hasBingo ? const Color(0xFFE8B84B) : Colors.redAccent),
@@ -228,10 +228,10 @@ class _CheckCardScreenState extends State<CheckCardScreen> {
               Color bg;
               Color textColor;
               if (isFree) {
-                bg = _colColours[2].withOpacity(0.7);
+                bg = _colColours[2].withValues(alpha: 0.7);
                 textColor = Colors.white;
               } else if (marked) {
-                bg = _colColours[ci].withOpacity(0.6);
+                bg = _colColours[ci].withValues(alpha: 0.6);
                 textColor = Colors.white;
               } else {
                 bg = ri.isEven ? const Color(0xFF1E1E3A) : const Color(0xFF1A1A2E);

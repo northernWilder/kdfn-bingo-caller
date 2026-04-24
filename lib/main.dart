@@ -16,16 +16,16 @@ class KdfnBingoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => _AppGameState()..init()),
+        ChangeNotifierProvider(create: (_) => GameState()..loadCards()),
         Provider(create: (_) => AudioService()..init()),
       ],
       child: MaterialApp(
         title: 'Retrofit Bingo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.dark(
-            primary: const Color(0xFFE8B84B),
-            surface: const Color(0xFF16213E),
+                colorScheme: const ColorScheme.dark(
+            primary: Color(0xFFE8B84B),
+            surface: Color(0xFF16213E),
           ),
           useMaterial3: true,
           fontFamily: 'sans-serif',
@@ -33,40 +33,6 @@ class KdfnBingoApp extends StatelessWidget {
         home: const _LoadingWrapper(),
       ),
     );
-  }
-}
-
-// Thin ChangeNotifier wrapper around GameState so Provider works correctly
-class _AppGameState extends GameState with ChangeNotifier {
-  Future<void> init() async {
-    await loadCards();
-    notifyListeners();
-  }
-
-  @override
-  void startGame() {
-    super.startGame();
-    notifyListeners();
-  }
-
-  @override
-  DrawnAddress? drawNext() {
-    final r = super.drawNext();
-    notifyListeners();
-    return r;
-  }
-
-  @override
-  void recordBingo(int cardNumber) {
-    super.recordBingo(cardNumber);
-    notifyListeners();
-  }
-
-  @override
-  bool advanceRound() {
-    final r = super.advanceRound();
-    notifyListeners();
-    return r;
   }
 }
 

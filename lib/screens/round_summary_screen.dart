@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/bingo_card.dart';
+import '../models/game_state.dart';
 
 class RoundSummaryScreen extends StatelessWidget {
   final int roundIndex;

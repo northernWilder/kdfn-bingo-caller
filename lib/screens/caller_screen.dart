@@ -74,7 +74,7 @@ class _CallerScreenState extends State<CallerScreen> {
 
     showDialog(
       context: ctx,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: const Color(0xFF16213E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         title: Text(
@@ -92,7 +92,7 @@ class _CallerScreenState extends State<CallerScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(_),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('OK', style: TextStyle(color: Color(0xFFE8B84B))),
           ),
         ],
@@ -241,7 +241,7 @@ class _CallerScreenState extends State<CallerScreen> {
           border: Border.all(color: const Color(0xFFE8B84B), width: 2),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFE8B84B).withOpacity(0.15),
+              color: const Color(0xFFE8B84B).withValues(alpha: 0.15),
               blurRadius: 20,
               spreadRadius: 2,
             ),
@@ -364,9 +364,9 @@ class _CallerScreenState extends State<CallerScreen> {
             margin: const EdgeInsets.only(right: 8),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: col.withOpacity(0.3),
+              color: col.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: col.withOpacity(0.6)),
+              border: Border.all(color: col.withValues(alpha: 0.6)),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
