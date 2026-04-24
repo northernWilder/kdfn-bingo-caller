@@ -231,31 +231,46 @@ class _CallerScreenState extends State<CallerScreen> {
     return GestureDetector(
       onTap: _drawing ? null : () => _draw(context),
       child: Container(
+        width: double.infinity,
         margin: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: const RadialGradient(
-            colors: [Color(0xFF0F3460), Color(0xFF16213E)],
-            radius: 0.8,
-          ),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFFE8B84B), width: 2),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFE8B84B).withValues(alpha: 0.15),
-              blurRadius: 20,
-              spreadRadius: 2,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              minWidth: 280,
+              minHeight: 340,
+              maxWidth: 440,
             ),
-          ],
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+              decoration: BoxDecoration(
+                gradient: const RadialGradient(
+                  colors: [Color(0xFF0F3460), Color(0xFF16213E)],
+                  radius: 0.8,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: const Color(0xFFE8B84B), width: 2),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFE8B84B).withValues(alpha: 0.15),
+                    blurRadius: 20,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: last == null
+                  ? _buildTapToStart()
+                  : _buildLastDraw(last, game),
+            ),
+          ),
         ),
-        child: last == null
-            ? _buildTapToStart()
-            : _buildLastDraw(last, game),
       ),
     );
   }
 
   Widget _buildTapToStart() {
     return const Column(
+      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(Icons.touch_app, color: Color(0xFFE8B84B), size: 64),
@@ -290,6 +305,7 @@ class _CallerScreenState extends State<CallerScreen> {
         : (colIdx >= 0 ? _colNames[colIdx] : drawn.column);
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
@@ -320,6 +336,7 @@ class _CallerScreenState extends State<CallerScreen> {
         const SizedBox(height: 8),
         Text(
           drawn.fullAddress,
+          textAlign: TextAlign.center,
           style: const TextStyle(color: Color(0xFFAAAAAA), fontSize: 18),
         ),
         if (drawn.isWild) ...[
