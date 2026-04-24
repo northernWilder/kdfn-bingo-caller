@@ -134,8 +134,7 @@ class BingoCard {
         }
         for (int c = 0; c < 5; c++) {
           if (_checkCol(c, drawn)) {
-            const names = ['Murphy', 'Hanna', 'McCandless', 'Swan/Crow/O\'Brien', 'Mc Streets'];
-            return '${names[c]} Column';
+            return 'Column ${c + 1}';
           }
         }
         if (_checkDiagMain(drawn)) return 'Diagonal (↘)';
